@@ -7,7 +7,7 @@ if (!supabase) {
 } else {
   supabase.auth.onAuthStateChange((event, session) => {
     if (session) {
-      window.location.href = 'index.html';
+      window.location.href = 'frontend/Homepage.html';
     }
   });
 
@@ -18,11 +18,11 @@ if (!supabase) {
       return;
     }
     if (data.session) {
-      window.location.href = 'index.html';
+      window.location.href = 'frontend/Homepage.html';
       return;
     }
     if (getStoredUser && getStoredUser()) {
-      window.location.href = 'index.html';
+      window.location.href = 'frontend/Homepage.html';
     }
   });
 }
@@ -85,7 +85,7 @@ async function submitLogin() {
       account_id: accountId
     });
   }
-  window.location.href = 'index.html';
+  window.location.href = 'frontend/Homepage.html';
 }
 
 async function submitLoginByUsername() {
@@ -145,5 +145,5 @@ async function submitLoginByUsername() {
       account_id: accountId
     });
   }
-  window.location.href = 'index.html';
+  window.location.href = 'frontend/Homepage.html';
 }

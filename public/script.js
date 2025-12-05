@@ -17,7 +17,7 @@ let accountLabels = {};
 
 function ensureLoggedIn() {
   if (!storedUser || !accountId) {
-    window.location.href = 'login.html';
+    window.location.href = 'index.html';
     return false;
   }
   return true;
@@ -228,7 +228,7 @@ async function logoutUser() {
     clearStoredUser();
   }
 
-  window.location.href = 'login.html';
+  window.location.href = 'index.html';
 }
 
 function updateUI() {

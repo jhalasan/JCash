@@ -37,7 +37,7 @@ async function submitCreateAccount() {
     }
 
     alert("Account created successfully!");
-    window.location.href = 'index.html';
+    window.location.href = 'frontend/Homepage.html';
   } catch (error) {
     console.error(error);
     alert("An error occurred during account creation.");

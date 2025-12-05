@@ -3,152 +3,48 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>JCash Wallet</title>
-
-  <!-- Styles -->
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <title>JCash - Login</title>
 
   <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="supabaseClient.js"></script>
+  <script src="public/supabaseClient.js"></script>
+  <script src="public/login.js" defer></script>
+  <script src="public/createAccount.js" defer></script>
 
-  <script>
-    window.addEventListener('load', async () => {
-      if (window.requireAuth) {
-        await window.requireAuth();
-      } else {
-        console.error('Supabase client not initialized.');
-      }
-    });
-  </script>
+  <link rel="stylesheet" href="frontend/login.css" />
 </head>
 
 <body>
-  <div class="app-wrapper">
-    <div class="app-container fade-in">
+  <div class="container">
 
-      <!-- HEADER (Improved) -->
-      <div class="top-header">
-        <h2 id="userNameDisplay">JCash</h2>
-        <button class="logout-btn" onclick="logoutUser()">
-          <i class="bi bi-box-arrow-right"></i>
-        </button>
-      </div>
+    <!-- LOGIN BOX -->
+    <div class="card">
+      <h2 class="title">Login to <span>JCash</span></h2>
 
-      <!-- BALANCE CARD (Improved Look, same IDs) -->
-      <div class="balance-card">
-        <span class="label">Wallet Balance</span>
-        <div class="amount" id="balance">₱0.00</div>
-      </div>
+      <input type="tel" id="loginPhoneNumber" placeholder="Phone number" class="input" />
+      <button class="btn" onclick="submitLogin()">Login</button>
 
-      <!-- ACTION BUTTONS (Same functions, cleaner layout) -->
-      <div class="quick-actions">
+      <div class="divider">or</div>
 
-        <button class="action" id="btnTopUp" onclick="openModal('topupModal')">
-          <i class="bi bi-wallet2"></i>
-          <span>Top Up</span>
-        </button>
-
-        <button class="action" id="btnTransfer" onclick="openModal('transferModal')">
-          <i class="bi bi-arrow-left-right"></i>
-          <span>Transfer</span>
-        </button>
-
-        <button class="action" id="btnBuy" onclick="openModal('buyModal')">
-          <i class="bi bi-bag-check"></i>
-          <span>Buy</span>
-        </button>
-
-        <button class="action" id="btnRefund" onclick="openModal('refundModal')">
-          <i class="bi bi-arrow-counterclockwise"></i>
-          <span>Refund</span>
-        </button>
-
-        <button class="action" id="btnHistory" onclick="openModal('historyModal')">
-          <i class="bi bi-clock-history"></i>
-          <span>History</span>
-        </button>
-
-      </div>
-
-      <!-- TRANSACTIONS (Preserved) -->
-      <div id="dashboard" class="tab-content active">
-        <div class="transaction-section">
-          <h3>Recent Transactions</h3>
-          <div id="transactionList" class="transaction-list"></div>
-        </div>
-      </div>
-
+      <input type="text" id="loginUsername" placeholder="Username" class="input" />
+      <button class="btn-secondary" onclick="submitLoginByUsername()">Login with Username</button>
     </div>
+
+    <!-- CREATE ACCOUNT BOX -->
+    <div class="card">
+      <h2 class="title">Create Account</h2>
+
+      <input type="tel" id="phoneNumber" placeholder="Phone number" class="input" />
+      <input type="text" id="username" placeholder="Username (optional)" class="input" />
+
+      <select id="roleSelect" class="input">
+        <option value="user">User</option>
+        <option value="merchant">Merchant</option>
+      </select>
+
+      <button class="btn" onclick="submitCreateAccount()">Create Account</button>
+    </div>
+
   </div>
-
-  <!-- ======= ORIGINAL MODALS (Unchanged) ======= -->
-
-  <div id="modalOverlay" class="modal-overlay hidden"></div>
-
-  <div class="modal hidden" id="topupModal">
-    <h3>Top Up Wallet</h3>
-    <input type="number" id="topupAmount" placeholder="Enter amount" />
-    <button onclick="submitTopUp()" class="submit-btn">Confirm</button>
-    <button onclick="closeModal()" class="cancel-btn">Cancel</button>
-  </div>
-
-  <div class="modal hidden" id="transferModal">
-    <h3>Transfer Funds</h3>
-    <input type="tel" id="transferUser" placeholder="Recipient Phone Number" />
-    <input type="number" id="transferAmount" placeholder="Enter amount" />
-    <button onclick="submitTransfer()" class="submit-btn">Send</button>
-    <button onclick="closeModal()" class="cancel-btn">Cancel</button>
-  </div>
-
-  <div class="modal hidden" id="buyModal">
-    <h3>Buy from Merchant</h3>
-    <select id="merchantSelect"></select>
-    <input type="number" id="buyAmount" placeholder="Enter purchase amount" />
-    <button onclick="submitBuy()" class="submit-btn">Buy</button>
-    <button onclick="closeModal()" class="cancel-btn">Cancel</button>
-  </div>
-
-  <div class="modal hidden" id="refundModal">
-    <h3>Refund</h3>
-    <label>Choose transaction to refund</label>
-    <select id="refundSource"></select>
-    <input type="text" id="refundNote" placeholder="Reason (optional)" />
-    <button onclick="submitRefund()" class="submit-btn">Process Refund</button>
-    <button onclick="closeModal()" class="cancel-btn">Cancel</button>
-  </div>
-
-  <div class="modal hidden" id="historyModal">
-    <h3>All Transactions</h3>
-    <div id="historyList" class="transaction-list"></div>
-    <button onclick="closeModal()" class="cancel-btn">Close</button>
-  </div>
-
-  <!-- Create Account -->
-  <div id="createAccountModal" class="modal hidden">
-    <h3>Create Account</h3>
-    <input type="tel" id="phoneNumber" placeholder="Enter phone number" />
-    <input type="text" id="username" placeholder="Enter username (optional)" />
-    <select id="roleSelect">
-      <option value="user">User</option>
-      <option value="merchant">Merchant</option>
-    </select>
-    <button onclick="submitCreateAccount()">Create Account</button>
-    <button onclick="closeModal()">Cancel</button>
-  </div>
-
-  <!-- Login -->
-  <div id="loginModal" class="modal hidden">
-    <h3>Login</h3>
-    <input type="tel" id="loginPhoneNumber" placeholder="Enter your phone number" />
-    <button onclick="submitLogin()">Login</button>
-    <button onclick="closeModal()">Cancel</button>
-  </div>
-
-  <!-- Scripts -->
-  <script src="createAccount.js"></script>
-  <script src="script.js"></script>
-
 </body>
 </html>

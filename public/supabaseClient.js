@@ -51,7 +51,7 @@ if (!window.supabase) {
       return null;
     }
     if (!data.session) {
-      window.location.href = 'login.html';
+      window.location.href = 'index.html';
       return null;
     }
     return data.session;
